@@ -9,27 +9,31 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['category_id','brand_id',
-    'name','slug',
-    'images','description','price',
-    'is_active','is_featured',
-    'in_stock','on_sale'];
+    protected $fillable = [
+        'category_id', 'brand_id',
+        'name', 'slug',
+        'images', 'description', 'price',
+        'is_active', 'is_featured',
+        'in_stock', 'on_sale'
+    ];
 
     protected $casts = [
         'image' => 'array',
     ];
 
-    public function category(){
+    public function category()
+    {
         return $this->belongsTo(Category::class);
     }
 
-    public function brand(){
+    public function brand()
+    {
         return $this->belongsTo(Brand::class);
-    } 
+    }
 
-    public function oredersItem(){
+    public function oredersItem()
+    {
 
         return $this->hasMany(OrderItem::class);
-
     }
 }
