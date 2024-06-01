@@ -100,6 +100,8 @@ class ProductResource extends Resource
                         Toggle::make('on_sale')
                             ->required()
                             ->default(false),
+
+                           
                     ]),
                 ])->columnSpan(1)
             ])->columns(3);
@@ -133,6 +135,8 @@ class ProductResource extends Resource
                 IconColumn::make('is_active')
                 ->boolean(),
 
+              
+
                 TextColumn::make('created_at')
                 ->dateTime()
                 ->sortable()
@@ -142,9 +146,6 @@ class ProductResource extends Resource
                 ->dateTime()
                 ->sortable()
                 ->toggleable(isToggledHiddenByDefault:true),
-
-               
-
                 ])
             ->filters([
 
