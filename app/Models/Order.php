@@ -13,6 +13,7 @@ class Order extends Model
         'user_id',
         'grand_total',
         'payment_status',
+        'payment_method',
         'status',
         'currency',
         'shipping_amount',

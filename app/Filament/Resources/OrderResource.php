@@ -203,7 +203,56 @@ class OrderResource extends Resource
     {
         return $table
             ->columns([
-                // يمكن إضافة الأعمدة هنا
+                Tables\Columns\TextColumn::make('id')
+                    ->label('Order ID')
+                    ->sortable()
+                    ->searchable(),
+
+                Tables\Columns\TextColumn::make('user.name')
+                    ->label('Customer')
+                    ->sortable()
+                    ->searchable(),
+
+                Tables\Columns\TextColumn::make('payment_method')
+                    ->label('Payment Method')
+                    ->sortable()
+                    ->searchable(),
+
+                Tables\Columns\TextColumn::make('payment_status')
+                    ->label('Payment Status')
+                    ->sortable()
+                    ->searchable(),
+
+                Tables\Columns\TextColumn::make('status')
+                    ->label('Order Status')
+                    ->sortable()
+                    ->searchable(),
+
+                Tables\Columns\TextColumn::make('currency')
+                    ->label('Currency')
+                    ->sortable()
+                    ->searchable(),
+
+                Tables\Columns\TextColumn::make('shipping_method')
+                    ->label('Shipping Method')
+                    ->sortable()
+                    ->searchable(),
+
+                Tables\Columns\TextColumn::make('grand_total')
+                    ->label('Grand Total')
+                    ->sortable()
+                    ->searchable()
+                    ->formatStateUsing(fn($state) => Number::currency($state, 'USD')),
+
+                Tables\Columns\TextColumn::make('created_at')
+                    ->label('Created At')
+                    ->sortable()
+                    ->dateTime('Y-m-d H:i:s'),
+
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->label('Updated At')
+                    ->sortable()
+                    ->dateTime('Y-m-d H:i:s'),
             ])
             ->filters([
                 // يمكن إضافة الفلاتر هنا
@@ -218,6 +267,7 @@ class OrderResource extends Resource
                 ]),
             ]);
     }
+
 
     public static function getRelations(): array
     {
