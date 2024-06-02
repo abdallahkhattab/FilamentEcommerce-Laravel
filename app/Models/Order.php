@@ -34,4 +34,17 @@ class Order extends Model
         return $this->hasOne(Address::class);
 
     }
+
+     // Method to calculate grand total
+     public function calculateGrandTotal()
+     {
+         return $this->items->sum('total_amount');
+     }
+ 
+     // Override save method to ensure grand total is saved
+     public function save(array $options = [])
+     {
+         $this->grand_total = $this->calculateGrandTotal();
+         parent::save($options);
+     }
 }
