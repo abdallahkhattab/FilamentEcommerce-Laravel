@@ -43,9 +43,5 @@ class Order extends Model
      }
  
      // Override save method to ensure grand total is saved
-     public function save(array $options = [])
-     {
-         $this->grand_total = $this->calculateGrandTotal();
-         parent::save($options);
-     }
+  
 }

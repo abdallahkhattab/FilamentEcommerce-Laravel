@@ -10,10 +10,12 @@ use App\Models\Product;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Forms\Form;
+use Pages\CreateAddress;
 use Filament\Tables\Table;
 use Illuminate\Support\Number;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Group;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Repeater;
@@ -25,6 +27,7 @@ use Filament\Forms\Components\ToggleButtons;
 use App\Filament\Resources\OrderResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\OrderResource\RelationManagers;
+use App\Filament\Resources\OrderResource\RelationManagers\AddressRelationManager;
 
 class OrderResource extends Resource
 {
@@ -188,9 +191,10 @@ class OrderResource extends Resource
                                     }
                                 }
                                 $set('grand_total',$total);
-                                return Number::currency($total,'USD'); // Formatting the total to 2 decimal places
-                            })
-                            ->columnSpanFull() // Optionally make it span full width if needed
+                                return Number::currency($total,'USD');
+                                Hidden::make('grand_total')->default(0);
+                                // Formatting the total to 2 decimal places
+                            })->columnSpanFull() // Optionally make it span full width if needed
                         
 
                             
@@ -247,12 +251,15 @@ class OrderResource extends Resource
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Created At')
                     ->sortable()
-                    ->dateTime('Y-m-d H:i:s'),
+                    ->dateTime('Y-m-d H:i:s')
+                    ->toggleable(isToggledHiddenByDefault:true),
 
                 Tables\Columns\TextColumn::make('updated_at')
                     ->label('Updated At')
                     ->sortable()
-                    ->dateTime('Y-m-d H:i:s'),
+                    ->dateTime('Y-m-d H:i:s')
+                    ->toggleable(isToggledHiddenByDefault:true),
+
             ])
             ->filters([
                 // يمكن إضافة الفلاتر هنا
@@ -260,6 +267,8 @@ class OrderResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -273,6 +282,7 @@ class OrderResource extends Resource
     {
         return [
             // يمكن إضافة العلاقات هنا
+            AddressRelationManager::class,
         ];
     }
 
