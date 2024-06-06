@@ -7,11 +7,15 @@ use App\Models\Order;
 use Filament\Tables\Table;
 use Illuminate\Support\Number;
 use Filament\Tables\Actions\Action;
+use Filament\Tables\Columns\TextColumn;
 use App\Filament\Resources\OrderResource;
 use Filament\Widgets\TableWidget as BaseWidget;
 
 class LastestOrders extends BaseWidget
 {
+    protected int | string | array $columnSpan = 'full';
+
+    protected static ?int $sort = 2;
     public function table(Table $table): Table
     {
         return $table
@@ -41,11 +45,24 @@ class LastestOrders extends BaseWidget
                 ->badge()
                 ->searchable(),
 
-            Tables\Columns\TextColumn::make('status')
-                ->label('Order Status')
-                ->badge()
-                ->sortable()
-                ->searchable(),
+                TextColumn::make('status')
+                ->badge('status')
+                ->searchable()
+                ->color(fn(string $state): string => match ($state) {
+                    'new' => 'info',
+                    'processing' => 'warning',
+                    'shipped' => 'success',
+                    'delivered' => 'success',
+                    'cancelled' => 'danger',
+                })
+                ->icon(fn(string $state): string => match ($state) {
+                    'new' => 'heroicon-m-sparkles',
+                    'processing' => 'heroicon-m-arrow-path',
+                    'shipped' => 'heroicon-m-truck',
+                    'delivered' => 'heroicon-m-check-badge',
+                    'cancelled' => 'heroicon-m-x-circle',
+                })
+                ->sortable(),
 
 
             Tables\Columns\TextColumn::make('grand_total')
