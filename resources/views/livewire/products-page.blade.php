@@ -6,19 +6,21 @@
               <div class="w-full pr-2 lg:w-1/4 lg:block">
                   <!-- Categories -->
                   <div class="p-4 mb-5 bg-white border border-gray-200 dark:border-gray-900 dark:bg-gray-900">
-                      <h2 class="text-2xl font-bold dark:text-gray-400">Categories</h2>
-                      <div class="w-16 pb-2 mb-6 border-b border-rose-600 dark:border-gray-400"></div>
-                      <ul>
-                          @foreach ($categories as $category)
-                              <li class="mb-4" wire:key = "{{ $category->id }}">
-                                  <label class="flex items-center dark:text-gray-400" for="{{ $category->slug }}">
-                                      <input type="checkbox" id="{{ $category->slug }}" value="{{ $category->id }}" class="w-4 h-4 mr-2">
-                                      <span class="text-lg">{{ $category->name }}</span>
-                                  </label>
-                              </li>
-                          @endforeach
-                      </ul>
-                  </div>
+                    <h2 class="text-2xl font-bold dark:text-gray-400">Categories</h2>
+                    {{ json_encode($selected_categories) }}
+                    <div class="w-16 pb-2 mb-6 border-b border-rose-600 dark:border-gray-400"></div>
+                    <ul>
+                        @foreach ($categories as $category)
+                            <li class="mb-4" wire:key="{{ $category->id }}">
+                                <label class="flex items-center dark:text-gray-400" for="{{ $category->slug }}">
+                                    <input type="checkbox" wire:model.live="selected_categories" id="{{ $category->slug }}" value="{{ $category->id }}" class="w-4 h-4 mr-2">
+                                    <span class="text-lg">{{ $category->name }}</span>
+                                </label>
+                            </li>
+                        @endforeach
+                    </ul>
+                </div>
+                
 
                   <!-- Brands -->
                   <div class="p-4 mb-5 bg-white border border-gray-200 dark:bg-gray-900 dark:border-gray-900">
@@ -28,7 +30,7 @@
                           @foreach ($brands as $brand)
                               <li class="mb-4">
                                   <label for="{{ $brand->slug }}" class="flex items-center dark:text-gray-300">
-                                      <input type="checkbox" id = "{{ $brand->slug }}" value ={{ $brand->id }}class="w-4 h-4 mr-2">
+                                      <input type="checkbox" wire:model.live="selected_brands" id = "{{ $brand->slug }}" value ={{ $brand->id }}class="w-4 h-4 mr-2">
                                       <span class="text-lg dark:text-gray-400">{{ $brand->name }}</span>
                                   </label>
                               </li>
