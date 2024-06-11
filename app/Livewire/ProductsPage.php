@@ -28,6 +28,10 @@ class ProductsPage extends Component
     #[Url]
     public $on_sale;
 
+    #[Url]
+
+    public $price_range = 300000;
+
 
  
    
@@ -56,6 +60,10 @@ class ProductsPage extends Component
 
               if($this->on_sale){
                 $query->where('on_sale',1);
+              }
+
+              if($this->price_range){
+                $query->wherebetween('price',[0,$this->price_range]);
               }
        
        
