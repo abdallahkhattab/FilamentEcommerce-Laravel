@@ -29,8 +29,11 @@ class ProductsPage extends Component
     public $on_sale;
 
     #[Url]
-
     public $price_range = 300000;
+
+    #[Url]
+    public $sort = 'latest';
+
 
 
  
@@ -65,6 +68,16 @@ class ProductsPage extends Component
               if($this->price_range){
                 $query->wherebetween('price',[0,$this->price_range]);
               }
+
+              if($this->sort == 'latest'){
+                $query->latest();
+              }
+
+              if($this->sort == 'price'){
+                $query->orderBy('price');
+              }
+
+
        
        
                // Fetch the paginated products
