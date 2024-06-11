@@ -22,6 +22,13 @@ class ProductsPage extends Component
     #[Url]
     public $selected_brands = [];
 
+    #[Url]
+    public $featured;
+
+    #[Url]
+    public $on_sale;
+
+
  
    
     public function render()
@@ -42,6 +49,15 @@ class ProductsPage extends Component
                if (!empty($this->selected_brands)) {
                 $query->whereIn('brand_id', $this->selected_brands);
             }
+
+              if($this->featured){
+                $query->where('is_featured',1);
+              }
+
+              if($this->on_sale){
+                $query->where('on_sale',1);
+              }
+       
        
                // Fetch the paginated products
                $products = $query->paginate(3);
