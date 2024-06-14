@@ -3,48 +3,46 @@ namespace App\Helpers;
 
 use App\Models\Product;
 use Illuminate\Support\Facades\Cookie;
-use Illuminate\Support\Facades\Log;
 
 class CartManagement {
 
-    protected $cookieExpiration;
-
-    public function __construct($cookieExpiration = 60 * 24 * 30) {
-        $this->cookieExpiration = $cookieExpiration;
-    }
-
     // Add item to cart
-    public function addItemToCart($product_id) {
-        $cart_items = $this->getCartItemsFromCookie();
+    static public function addItemToCart($product_id) {
+        $cart_items = self::getCartItemsFromCookie();
 
-        $existing_item = array_search($product_id, array_column($cart_items, 'product_id'));
+        $existing_item = null;
 
-        if ($existing_item !== false) {
-            $this->updateCartItemQuantity($cart_items, $product_id, 1);
+        foreach ($cart_items as $key => $item) {
+            if ($item['product_id'] == $product_id) {
+                $existing_item = $key;
+                break;
+            }
+        }
+
+        if ($existing_item !== null) {
+            $cart_items[$existing_item]['quantity']++;
+            $cart_items[$existing_item]['total_amount'] = $cart_items[$existing_item]['quantity'] * $cart_items[$existing_item]['unit_amount'];
         } else {
-            $product = Product::find($product_id, ['id', 'name', 'price', 'images']);
+            $product = Product::where('id', $product_id)->first(['id', 'name', 'price', 'images']);
             if ($product) {
                 $cart_items[] = [
                     'product_id' => $product_id,
                     'name' => $product->name,
-                    'image' => $product->images[0] ?? null,
+                    'image' => $product->images[0],
                     'quantity' => 1,
                     'unit_amount' => $product->price,
                     'total_amount' => $product->price
                 ];
-            } else {
-                Log::error("Product with ID {$product_id} not found.");
-                return null;
             }
         }
 
-        $this->addCartItemsToCookie($cart_items);
+        self::addCartItemsToCookie($cart_items);
         return count($cart_items);
     }
 
     // Remove item from cart
-    public function removeItemFromCart($product_id) {
-        $cart_items = $this->getCartItemsFromCookie();
+    static public function removeItemFromCart($product_id) {
+        $cart_items = self::getCartItemsFromCookie();
 
         foreach ($cart_items as $key => $item) {
             if ($item['product_id'] == $product_id) {
@@ -54,74 +52,86 @@ class CartManagement {
         }
 
         $cart_items = array_values($cart_items); // Reindex array after removal
-        $this->addCartItemsToCookie($cart_items);
+        self::addCartItemsToCookie($cart_items);
     }
 
     // Add cart items to cookie
-    protected function addCartItemsToCookie($cart_items) {
-        Cookie::queue('cart_items', json_encode($cart_items), $this->cookieExpiration);
+    static public function addCartItemsToCookie($cart_items) {
+        Cookie::queue('cart_items', json_encode($cart_items), 60 * 24 * 30);
     }
 
     // Clear cart items from cookie
-    public function clearCartItems() {
+    static public function clearCartItems() {
         Cookie::queue(Cookie::forget('cart_items'));
     }
 
     // Get all cart items from cookie
-    public function getCartItemsFromCookie() {
+    static public function getCartItemsFromCookie() {
         $cart_items = json_decode(Cookie::get('cart_items'), true);
-        return $cart_items ?: [];
+        if (!$cart_items) {
+            $cart_items = [];
+        }
+        return $cart_items;
     }
 
     // Increment item quantity
-    public function incrementItemQuantityToCartItem($product_id) {
-        $cart_items = $this->getCartItemsFromCookie();
-        $this->updateCartItemQuantity($cart_items, $product_id, 1);
-        $this->addCartItemsToCookie($cart_items);
+    static public function incrementItemQuantityToCartItem($product_id) {
+        $cart_items = self::getCartItemsFromCookie();
+
+        foreach ($cart_items as $key => $item) {
+            if ($item['product_id'] == $product_id) {
+                $cart_items[$key]['quantity']++;
+                $cart_items[$key]['total_amount'] = $cart_items[$key]['quantity'] * $cart_items[$key]['unit_amount'];
+                break;
+            }
+        }
+
+        self::addCartItemsToCookie($cart_items);
     }
 
     // Decrement item quantity
-    public function decrementItemQuantityToCartItem($product_id) {
-        $cart_items = $this->getCartItemsFromCookie();
-        $this->updateCartItemQuantity($cart_items, $product_id, -1);
-        $this->addCartItemsToCookie($cart_items);
-    }
+    static public function decrementItemQuantityToCartItem($product_id) {
+        $cart_items = self::getCartItemsFromCookie();
 
-    // Calculate grand total
-    public function calculateGrandTotal() {
-        $cart_items = $this->getCartItemsFromCookie();
-        $grand_total = 0;
-
-        foreach ($cart_items as $item) {
-            $grand_total += $item['total_amount'];
-        }
-
-        return $grand_total;
-    }
-
-    // Update cart item quantity
-    protected function updateCartItemQuantity(&$cart_items, $product_id, $quantityChange) {
         foreach ($cart_items as $key => $item) {
             if ($item['product_id'] == $product_id) {
-                $cart_items[$key]['quantity'] += $quantityChange;
-                if ($cart_items[$key]['quantity'] <= 0) {
-                    unset($cart_items[$key]);
-                } else {
+                if ($cart_items[$key]['quantity'] > 1) {
+                    $cart_items[$key]['quantity']--;
                     $cart_items[$key]['total_amount'] = $cart_items[$key]['quantity'] * $cart_items[$key]['unit_amount'];
+                } else {
+                    unset($cart_items[$key]);
                 }
                 break;
             }
         }
-        $cart_items = array_values($cart_items); // Reindex array after modification
+
+        $cart_items = array_values($cart_items); // Reindex array after removal
+        self::addCartItemsToCookie($cart_items);
     }
+
+        // Calculate grand total
+        static public function calculateGrandTotal() {
+            $cart_items = self::getCartItemsFromCookie();
+            $grand_total = 0;
+
+            foreach ($cart_items as $item) {
+                $grand_total += $item['total_amount'];
+            }
+
+            return $grand_total;
+        }
+
 }
+
+
+
 
 // Usage example
 /*
 $cart = new \App\Helpers\CartManagement();
 $cart->addItemToCart(1); // Add product with ID 1
-$cart->incrementItemQuantityToCartItem(1); // Increment quantity of product with ID 1
-$cart->decrementItemQuantityToCartItem(1); // Decrement quantity of product with ID 1
+$cart->incrementItemQuantity(1); // Increment quantity of product with ID 1
+$cart->decrementItemQuantity(1); // Decrement quantity of product with ID 1
 $cart->removeItemFromCart(1); // Remove product with ID 1
 print_r($cart->getCartItemsFromCookie());
 $cart->clearCartItems(); // Clear all items from the cart
