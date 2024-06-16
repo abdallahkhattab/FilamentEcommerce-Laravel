@@ -146,16 +146,16 @@ class CartManagement {
     }
 
         // Calculate grand total
-        static public function calculateGrandTotal() {
-            $cart_items = self::getCartItemsFromCookie();
-            $grand_total = 0;
-
-            foreach ($cart_items as $item) {
-                $grand_total += $item['total_amount'];
+        static public function calculateGrandTotal($items) {
+            // Check if $items is an array and not null
+            if (is_array($items)) {
+                return array_sum(array_column($items, 'total_amount'));
+            } else {
+                // Handle the case where $items is not an array or is null
+                return 0; // or any other default value you consider appropriate
             }
-
-            return $grand_total;
         }
+        
 
 }
 
