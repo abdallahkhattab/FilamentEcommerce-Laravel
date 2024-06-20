@@ -3,8 +3,10 @@
 namespace App\Livewire\Auth;
 
 use Livewire\Component;
+use Livewire\Attributes\Title;
 use Illuminate\Support\Facades\Auth;
 
+#[Title('login')]
 class LoginPage extends Component
 {
 
@@ -21,7 +23,7 @@ class LoginPage extends Component
         $this->validate();
 
         if (Auth::attempt(['email' => $this->email, 'password' => $this->password])) {
-            return redirect()->intended('/dashboard');
+            return redirect()->intended();
         } else {
             session()->flash('error', 'Invalid email or password');
         }
