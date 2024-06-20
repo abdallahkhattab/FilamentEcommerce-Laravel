@@ -4,6 +4,7 @@
         <h1 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">
             Checkout
         </h1>
+       <form wire:submit.prevent= 'placeOrder'>
         <div class="grid grid-cols-12 gap-4">
             <div class="md:col-span-12 lg:col-span-8 col-span-12">
                 <!-- Card -->
@@ -15,55 +16,83 @@
                         </h2>
                         <div class="grid grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-gray-700 dark:text-white mb-1" for="first_name">
+                                <label wire:model = "first_name" class="block text-gray-700 dark:text-white mb-1" for="first_name">
                                     First Name
                                 </label>
                                 <input class="w-full rounded-lg border py-2 px-3 dark:bg-gray-700 dark:text-white dark:border-none" id="first_name" type="text">
                                 </input>
+                                @error('first_name')
+                                <span class="text-red-500 text-sm">{{ $message }}</span>
+                                    
+                                @enderror
                             </div>
                             <div>
-                                <label class="block text-gray-700 dark:text-white mb-1" for="last_name">
+                                <label  wire:model = "last_name" class="block text-gray-700 dark:text-white mb-1" for="last_name">
                                     Last Name
                                 </label>
                                 <input class="w-full rounded-lg border py-2 px-3 dark:bg-gray-700 dark:text-white dark:border-none" id="last_name" type="text">
                                 </input>
+                                @error('last_name')
+                                <span class="text-red-500 text-sm">{{ $message }}</span>
+                                    
+                                @enderror
                             </div>
                         </div>
                         <div class="mt-4">
-                            <label class="block text-gray-700 dark:text-white mb-1" for="phone">
+                            <label  wire:model = "phone" class="block text-gray-700 dark:text-white mb-1" for="phone">
                                 Phone
                             </label>
                             <input class="w-full rounded-lg border py-2 px-3 dark:bg-gray-700 dark:text-white dark:border-none" id="phone" type="text">
                             </input>
+                            @error('phone')
+                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                                
+                            @enderror
                         </div>
                         <div class="mt-4">
-                            <label class="block text-gray-700 dark:text-white mb-1" for="address">
+                            <label  wire:model = "street_address" class="block text-gray-700 dark:text-white mb-1" for="address">
                                 Address
                             </label>
                             <input class="w-full rounded-lg border py-2 px-3 dark:bg-gray-700 dark:text-white dark:border-none" id="address" type="text">
                             </input>
+                            @error('street_address')
+                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                                
+                            @enderror
                         </div>
                         <div class="mt-4">
-                            <label class="block text-gray-700 dark:text-white mb-1" for="city">
+                            <label  wire:model = "city" class="block text-gray-700 dark:text-white mb-1" for="city">
                                 City
                             </label>
                             <input class="w-full rounded-lg border py-2 px-3 dark:bg-gray-700 dark:text-white dark:border-none" id="city" type="text">
                             </input>
+                            @error('city')
+                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                                
+                            @enderror
                         </div>
                         <div class="grid grid-cols-2 gap-4 mt-4">
                             <div>
-                                <label class="block text-gray-700 dark:text-white mb-1" for="state">
+                                <label  wire:model = "state" class="block text-gray-700 dark:text-white mb-1" for="state">
                                     State
                                 </label>
                                 <input class="w-full rounded-lg border py-2 px-3 dark:bg-gray-700 dark:text-white dark:border-none" id="state" type="text">
                                 </input>
+                                @error('state')
+                                <span class="text-red-500 text-sm">{{ $message }}</span>
+                                    
+                                @enderror
                             </div>
                             <div>
-                                <label class="block text-gray-700 dark:text-white mb-1" for="zip">
+                                <label   wire:model = "zip_code" class="block text-gray-700 dark:text-white mb-1" for="zip">
                                     ZIP Code
                                 </label>
                                 <input class="w-full rounded-lg border py-2 px-3 dark:bg-gray-700 dark:text-white dark:border-none" id="zip" type="text">
                                 </input>
+                                @error('zip_code')
+                                <span class="text-red-500 text-sm">{{ $message }}</span>
+                                    
+                                @enderror
                             </div>
                         </div>
                     </div>
@@ -72,7 +101,7 @@
                     </div>
                     <ul class="grid w-full gap-6 md:grid-cols-2">
                         <li>
-                            <input class="hidden peer" id="hosting-small" name="hosting" required="" type="radio" value="hosting-small" />
+                            <input wire:model = 'payment_method' class="hidden peer" id="hosting-small"  required="" type="radio" value="cod" />
                             <label class="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700" for="hosting-small">
                                 <div class="block">
                                     <div class="w-full text-lg font-semibold">
@@ -86,7 +115,7 @@
                             </label>
                         </li>
                         <li>
-                            <input class="hidden peer" id="hosting-big" name="hosting" type="radio" value="hosting-big">
+                            <input wire:model ="payment_method" class="hidden peer" id="hosting-big"  type="radio" value="hosting-big" value="Stripe">
                             <label class="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700" for="hosting-big">
                                 <div class="block">
                                     <div class="w-full text-lg font-semibold">
@@ -101,6 +130,9 @@
                             </input>
                         </li>
                     </ul>
+                    @error('payment_method')
+                    <span class="text-red-500 text-sm">{{ $message }}</span>   
+                    @enderror
                 </div>
                 <!-- End Card -->
             </div>
@@ -143,7 +175,7 @@
                     </div>
                     </hr>
                 </div>
-                <button class="bg-green-500 mt-4 w-full p-3 rounded-lg text-lg text-white hover:bg-green-600">
+                <button type ="submit" class="bg-green-500 mt-4 w-full p-3 rounded-lg text-lg text-white hover:bg-green-600">
                     Place Order
                 </button>
                 <div class="bg-white mt-4 rounded-xl shadow p-4 sm:p-7 dark:bg-slate-900">
@@ -180,5 +212,6 @@
                 </div>
             </div>
         </div>
+       </form>
     </div>
 
