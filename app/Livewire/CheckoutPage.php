@@ -35,10 +35,10 @@ class CheckoutPage extends Component
             'zip_code' => 'required',
             'payment_method' => 'required',
         ]);
-
+    
         $cart_items = CartManagement::getCartItemsFromCookie();
         $line_items = [];
-
+    
         foreach ($cart_items as $item) {
             $line_items[] = [
                 'price_data' => [
@@ -51,30 +51,32 @@ class CheckoutPage extends Component
                 'quantity' => $item['quantity'],
             ];
         }
-
-        $address = new Address();
-        $address->street_address = $this->street_address;
-        $address->city = $this->city;
-        $address->state = $this->state;
-        $address->zip_code = $this->zip_code;
-
+    
         $order = new Order();
         $order->user_id = auth()->user()->id;
-        $order->first_name = $this->first_name;
-        $order->last_name = $this->last_name;
-        $order->phone = $this->phone;
+        //$order->first_name = $this->first_name;
+        //$order->last_name = $this->last_name;
+      //  $order->phone = $this->phone;
         $order->payment_method = $this->payment_method;
         $order->payment_status = 'pending';
         $order->currency = 'ILS';
         $order->shipping_amount = 0;
         $order->shipping_method = 'none';
         $order->notes = 'Order Placed by ' . auth()->user()->name;
-        $order->line_items = json_encode($line_items);
-        $order->total_amount = CartManagement::calculateGrandTotal($cart_items); // Assuming a method to calculate total
-
+      //  $order->line_items = json_encode($line_items);
+       // $order->total_amount = CartManagement::calculateGrandTotal($cart_items);
+        $order->save(); // Save the order first to get the ID
+    
+        $address = new Address();
+        $address->street_address = $this->street_address;
+        $address->city = $this->city;
+        $address->state = $this->state;
+        $address->zip_code = $this->zip_code;
+        $address->order_id = $order->id; // Set the order ID after saving the order
+    
         if ($this->payment_method == 'stripe') {
             Stripe::setApiKey(env('STRIPE_SECRET'));
-
+    
             $session = Session::create([
                 'payment_method_types' => ['card'],
                 'customer_email' => auth()->user()->email,
@@ -83,32 +85,32 @@ class CheckoutPage extends Component
                 'success_url' => route('success') . '?session_id={CHECKOUT_SESSION_ID}',
                 'cancel_url' => route('cancel'),
             ]);
-
-            // Save address and order only after successful Stripe session creation
-            $address->save();
-            $order->address_id = $address->id;
+    
+            // Save the Stripe session ID to the order
             $order->stripe_session_id = $session->id;
             $order->save();
-
+    
+            // Save the address after setting the order ID
+            $address->save();
+    
             // Clear the cart
             CartManagement::clearCartItems();
-
+    
             // Redirect to Stripe checkout
             return redirect($session->url);
         } else {
-            // For non-Stripe payments, save the address and order immediately
+            // Save the address for non-Stripe payments
             $address->save();
-            $order->address_id = $address->id;
-            $order->save();
-
+    
             // Clear the cart
             CartManagement::clearCartItems();
-
+    
             // Redirect or show a success message
             session()->flash('message', 'Order placed successfully!');
-            return redirect()->route('order.success'); // Assuming a route for successful order
+            return redirect()->route('success'); // Assuming a route for successful order
         }
     }
+    
 
     public function render()
     {
