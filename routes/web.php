@@ -46,7 +46,6 @@ Route::get('/reset',ResetPasswordPage::class);
 });
 
 
-Route::get('/success',SuccessPage::class);
 
 Route::middleware('auth')->group(function(){
 
@@ -59,7 +58,9 @@ Route::get('/checkout',CheckoutPage::class);
 Route::get('/my-orders',MyOrderPage::class);
 Route::get('/my-orders',MyOrderPage::class);
 Route::get('/my-orders/{order}',MyOrderDetailPage::class);
-Route::get('/cancel',CancelPage::class);
+Route::get('/cancel',CancelPage::class)->name('cancel');
+Route::get('/success',SuccessPage::class)->name('success');
+
 });
 
 
