@@ -7,6 +7,23 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
+Admin panel screenshot🌟 :
+📊 Great job on the dashboard!
+📋 organized table views.
+🔍 Search functionality is on point!
+🚀 Performance improvements are noticeable.
+
+![fil1](https://github.com/user-attachments/assets/b79149a9-ff13-47fb-8477-84341e4de648)
+![fil2](https://github.com/user-attachments/assets/e5368920-86e0-4a14-850e-9d6b561bd7d1)
+![fil3PNG](https://github.com/user-attachments/assets/67e92925-fa01-4650-acc1-3617e7146735)
+![fil4PNG](https://github.com/user-attachments/assets/958ba9e6-7878-47bc-83b7-7752005d719f)
+![fil5e](https://github.com/user-attachments/assets/c80d1c73-8510-4661-a1f1-7eeea1e61989)
+![fil6](https://github.com/user-attachments/assets/f229cfac-04e8-4e17-932f-0c28461a3ad6)
+![fil7](https://github.com/user-attachments/assets/8f229e71-d37c-4e51-8e31-f5ca10cc3f9a)
+
+![fil79](https://github.com/user-attachments/assets/ea59f477-877c-45a1-be9c-15965ea47c9f)
+
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
