@@ -8,10 +8,8 @@
 </p>
 
 Admin panel screenshot🌟 :
-📊 Great job on the dashboard!
 📋 organized table views.
 🔍 Search functionality is on point!
-🚀 Performance improvements are noticeable.
 
 ![fil1](https://github.com/user-attachments/assets/b79149a9-ff13-47fb-8477-84341e4de648)
 ![fil2](https://github.com/user-attachments/assets/e5368920-86e0-4a14-850e-9d6b561bd7d1)
